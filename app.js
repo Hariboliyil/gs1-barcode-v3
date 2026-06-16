@@ -347,7 +347,11 @@ async function downloadLabel() {
 async function printLabel() {
   setStatus('Preparing print…');
   try {
-    // Render label to high-res image
+    // ZD420 is 203dpi. 4in×2in = 812×406 px at 203dpi
+    const DPI    = 203;
+    const W_PX   = 4 * DPI; // 812
+    const H_PX   = 2 * DPI; // 406
+
     const c = await html2canvas(el.labelPreview, {
       backgroundColor: '#ffffff',
       scale: 4,
@@ -356,29 +360,67 @@ async function printLabel() {
     });
     const dataUrl = c.toDataURL('image/png');
 
-    // Remove previous print area if any
-    const prev = document.getElementById('printArea');
-    if (prev) prev.remove();
+    // Build a self-contained print page sized EXACTLY to 812×406px
+    // No margins, no scaling — 1px = 1 printer dot at 203dpi
+    const html = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<style>
+  @page {
+    margin: 0;
+    size: ${W_PX}px ${H_PX}px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body {
+    width:  ${W_PX}px;
+    height: ${H_PX}px;
+    overflow: hidden;
+    background: #fff;
+  }
+  img {
+    display: block;
+    width:  ${W_PX}px;
+    height: ${H_PX}px;
+  }
+</style>
+</head>
+<body>
+<img src="${dataUrl}"/>
+<script>
+  var img = document.querySelector('img');
+  function doPrint() {
+    window.focus();
+    window.print();
+    setTimeout(function(){ window.close(); }, 1000);
+  }
+  if (img.complete) {
+    doPrint();
+  } else {
+    img.onload = doPrint;
+  }
+<\/script>
+</body>
+</html>`;
 
-    // Build a div with the image, hidden on screen, visible only in print CSS
-    const img = document.createElement('img');
-    img.src = dataUrl;
+    const blob = new Blob([html], { type: 'text/html' });
+    const url  = URL.createObjectURL(blob);
+    const win  = window.open(url, '_blank',
+      `width=${W_PX},height=${H_PX},toolbar=0,menubar=0,scrollbars=0`);
 
-    const div = document.createElement('div');
-    div.id = 'printArea';
-    div.appendChild(img);
-    document.body.appendChild(div);
+    if (!win) {
+      alert('Pop-up blocked!\n\nPlease click the address bar lock/info icon → Site settings → Allow pop-ups, then try Print again.');
+      setStatus('Pop-up blocked — allow pop-ups and retry');
+      URL.revokeObjectURL(url);
+      return;
+    }
 
-    // Wait for image to fully load then print
-    img.onload = () => {
-      window.print();
-      setTimeout(() => { div.remove(); setStatus('Rendered'); }, 2000);
-    };
-    img.onerror = () => { div.remove(); setStatus('Print image failed'); };
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    setStatus('Print dialog opened');
 
   } catch(err) {
     console.error(err);
-    setStatus('Print failed: ' + (err.message||err));
+    setStatus('Print failed: ' + (err.message || err));
   }
 }
 
