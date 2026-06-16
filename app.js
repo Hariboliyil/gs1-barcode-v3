@@ -55,7 +55,7 @@ function norm(v)  { return text(v).toUpperCase(); }
 function optionalText(v) {
   const c = text(v);
   if (!c || /^no reference$/i.test(c) || /^n\/a$/i.test(c)) return '';
-  return c;
+  return c.replace(/\./g, '-');
 }
 
 function excelSerialToDate(n) {
