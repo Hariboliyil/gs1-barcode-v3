@@ -381,18 +381,20 @@ h1 {
 
 .label-timestamp {
   position: absolute;
-  right: 2px;
-  top: 50%;
-  transform: translateY(-50%) rotate(90deg);
-  transform-origin: center center;
-  font-size: clamp(10px, 1.4vw, 14px);
-  font-weight: 500;
-  letter-spacing: 0.02em;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   color: #111;
   white-space: nowrap;
   font-family: "IBM Plex Mono", monospace;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
 }
 
 .label-locator-qr {
