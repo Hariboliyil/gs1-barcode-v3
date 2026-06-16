@@ -295,7 +295,7 @@ h1 {
 
 .label-generic {
   font-weight: 700;
-  font-size: clamp(18px, 3vw, 30px);
+  font-size: clamp(24px, 4vw, 40px);
   line-height: 1;
   letter-spacing: -0.05em;
 }
