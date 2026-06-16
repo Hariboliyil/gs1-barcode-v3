@@ -347,11 +347,6 @@ async function downloadLabel() {
 async function printLabel() {
   setStatus('Preparing print…');
   try {
-    // ZD420 is 203dpi. 4in×2in = 812×406 px at 203dpi
-    const DPI    = 203;
-    const W_PX   = 4 * DPI; // 812
-    const H_PX   = 2 * DPI; // 406
-
     const c = await html2canvas(el.labelPreview, {
       backgroundColor: '#ffffff',
       scale: 4,
@@ -360,8 +355,6 @@ async function printLabel() {
     });
     const dataUrl = c.toDataURL('image/png');
 
-    // Build a self-contained print page sized EXACTLY to 812×406px
-    // No margins, no scaling — 1px = 1 printer dot at 203dpi
     const html = `<!DOCTYPE html>
 <html>
 <head>
@@ -369,19 +362,23 @@ async function printLabel() {
 <style>
   @page {
     margin: 0;
-    size: ${W_PX}px ${H_PX}px;
+    size: 4in 2in landscape;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body {
-    width:  ${W_PX}px;
-    height: ${H_PX}px;
+    width: 4in;
+    height: 2in;
+    max-width: 4in;
+    max-height: 2in;
     overflow: hidden;
     background: #fff;
   }
   img {
     display: block;
-    width:  ${W_PX}px;
-    height: ${H_PX}px;
+    width: 4in;
+    height: 2in;
+    max-width: 4in;
+    max-height: 2in;
   }
 </style>
 </head>
@@ -392,12 +389,12 @@ async function printLabel() {
   function doPrint() {
     window.focus();
     window.print();
-    setTimeout(function(){ window.close(); }, 1000);
+    setTimeout(function(){ window.close(); }, 1500);
   }
-  if (img.complete) {
-    doPrint();
+  if (img.complete && img.naturalWidth > 0) {
+    setTimeout(doPrint, 300);
   } else {
-    img.onload = doPrint;
+    img.onload = function(){ setTimeout(doPrint, 300); };
   }
 <\/script>
 </body>
@@ -406,16 +403,16 @@ async function printLabel() {
     const blob = new Blob([html], { type: 'text/html' });
     const url  = URL.createObjectURL(blob);
     const win  = window.open(url, '_blank',
-      `width=${W_PX},height=${H_PX},toolbar=0,menubar=0,scrollbars=0`);
+      'width=816,height=412,toolbar=0,menubar=0,scrollbars=0,resizable=0');
 
     if (!win) {
-      alert('Pop-up blocked!\n\nPlease click the address bar lock/info icon → Site settings → Allow pop-ups, then try Print again.');
+      alert('Pop-up blocked!\n\nAllow pop-ups for this site in Chrome, then try again.');
       setStatus('Pop-up blocked — allow pop-ups and retry');
       URL.revokeObjectURL(url);
       return;
     }
 
-    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    setTimeout(() => URL.revokeObjectURL(url), 15000);
     setStatus('Print dialog opened');
 
   } catch(err) {
