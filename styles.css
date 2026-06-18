@@ -265,15 +265,15 @@ h1 {
 }
 
 .label-left {
-  display: flex;
-  align-items: stretch;
+  display: grid;
+  place-items: center start;
   padding-right: 4px;
 }
 
 .label-left canvas {
-  width: 100% !important;
-  height: 100% !important;
-  max-width: 100%;
+  width: 100%;
+  height: auto;
+  max-width: 142px;
   image-rendering: pixelated;
 }
 
