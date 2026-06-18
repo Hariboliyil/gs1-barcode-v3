@@ -460,27 +460,44 @@ h1 {
 
 /* ── Credit ── */
 .credit {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  font-weight: 700;
-  letter-spacing: -0.03em;
+  gap: 0;
+  font-weight: 800;
   font-size: 1rem;
+  letter-spacing: -0.01em;
+  border-radius: 6px;
+  overflow: hidden;
 }
 
-.credit__label { color: #f8fafc; }
+.credit__label {
+  display: none;
+}
 
 .credit__name {
-  background: linear-gradient(90deg, #ffffff 0%, #5ce1ff 18%, #00a3ff 52%, #1d4ed8 78%, #ffffff 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  display: inline-flex;
+  align-items: center;
+  background: #0a1628;
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+.credit__name .ha-white {
+  color: #ffffff;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 800;
+}
+
+.credit__name .ha-cyan {
+  color: #38bdf8;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 800;
 }
 
 .credit--top {
   margin: 0 0 8px;
   justify-content: flex-start;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
 }
 
 /* ── Responsive ── */
