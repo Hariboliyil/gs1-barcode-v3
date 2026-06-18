@@ -82,7 +82,7 @@ h1 {
 .hospital-logo {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   margin-bottom: 12px;
 }
 
