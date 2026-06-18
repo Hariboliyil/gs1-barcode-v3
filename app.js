@@ -283,13 +283,22 @@ function buildPayload() {
   const gtin   = text(state.form.gtin);
   const batch  = text(state.form.batch);
   const expiry = gs1Date(state.form.expiry);
-  if (!gtin || !batch || !expiry) return '';
-  return `01${gtin}17${expiry}10${batch}`;
+
+  if (!gtin) return '';
+
+  // Full GS1: GTIN + expiry + batch
+  if (gtin && expiry && batch) return `01${gtin}17${expiry}10${batch}`;
+  // GTIN + expiry only
+  if (gtin && expiry)          return `01${gtin}17${expiry}`;
+  // GTIN + batch only
+  if (gtin && batch)           return `01${gtin}10${batch}`;
+  // GTIN only
+  return `01${gtin}`;
 }
 
 function renderBarcode() {
   const payload = buildPayload();
-  el.barcodeTextView.textContent = payload || 'Enter product code, batch number, and expiry date';
+  el.barcodeTextView.textContent = payload || 'Enter product code to generate barcode';
 
   const ctx = el.barcodeCanvas.getContext('2d');
   ctx.clearRect(0, 0, el.barcodeCanvas.width, el.barcodeCanvas.height);
@@ -299,7 +308,7 @@ function renderBarcode() {
     ctx.font = '600 18px "Space Grotesk", sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('Awaiting input', el.barcodeCanvas.width/2, el.barcodeCanvas.height/2);
-    setStatus('Waiting for inputs');
+    setStatus('Waiting for product code');
     return;
   }
   try {
