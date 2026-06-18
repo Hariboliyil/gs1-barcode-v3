@@ -80,20 +80,17 @@ h1 {
 }
 
 .hospital-logo {
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 8px 14px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  justify-content: flex-end;
   margin-bottom: 12px;
 }
 
 .hospital-logo img {
-  height: 52px;
+  height: 90px;
   width: auto;
   display: block;
+  filter: brightness(0) invert(1);
 }
 
 .hero-card {
