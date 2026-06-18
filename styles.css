@@ -90,7 +90,8 @@ h1 {
   height: 90px;
   width: auto;
   display: block;
-  filter: brightness(0) invert(1);
+  mix-blend-mode: screen;
+  opacity: 0.92;
 }
 
 .hero-card {
