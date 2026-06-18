@@ -266,7 +266,7 @@ h1 {
 
 .label-left {
   display: grid;
-  place-items: start;
+  place-items: center start;
   padding-right: 4px;
 }
 
@@ -294,7 +294,7 @@ h1 {
 }
 
 .label-generic {
-  font-family: "Barlow Condensed", "Space Grotesk", sans-serif;
+  font-family: "Nunito", "Space Grotesk", sans-serif;
   font-weight: 900;
   font-size: clamp(24px, 4vw, 40px);
   line-height: 1;
@@ -302,7 +302,7 @@ h1 {
 }
 
 .label-product {
-  font-family: "Barlow Condensed", "Space Grotesk", sans-serif;
+  font-family: "Nunito", "Space Grotesk", sans-serif;
   font-weight: 900;
   font-size: clamp(28px, 4.5vw, 52px);
   line-height: 0.98;
