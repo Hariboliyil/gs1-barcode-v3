@@ -294,17 +294,19 @@ h1 {
 }
 
 .label-generic {
-  font-weight: 700;
+  font-family: "Barlow Condensed", "Space Grotesk", sans-serif;
+  font-weight: 900;
   font-size: clamp(24px, 4vw, 40px);
   line-height: 1;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.02em;
 }
 
 .label-product {
-  font-weight: 700;
-  font-size: clamp(24px, 4vw, 42px);
+  font-family: "Barlow Condensed", "Space Grotesk", sans-serif;
+  font-weight: 900;
+  font-size: clamp(28px, 4.5vw, 52px);
   line-height: 0.98;
-  letter-spacing: -0.06em;
+  letter-spacing: -0.02em;
 }
 
 .label-description {
