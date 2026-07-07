@@ -11,7 +11,6 @@
 }
 
 * { box-sizing: border-box; }
-
 html, body { margin: 0; min-height: 100%; }
 
 body {
@@ -23,14 +22,12 @@ body {
     linear-gradient(180deg, #061018 0%, #081621 48%, #050b10 100%);
 }
 
-/* ── Shell ── */
 .shell {
   width: min(1440px, calc(100vw - 32px));
   margin: 0 auto;
   padding: 28px 0 36px;
 }
 
-/* ── Hero ── */
 .hero {
   display: flex;
   align-items: flex-end;
@@ -44,6 +41,21 @@ body {
   flex-direction: column;
   align-items: stretch;
   gap: 0;
+}
+
+.hospital-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.hospital-logo img {
+  height: 90px;
+  width: auto;
+  display: block;
+  mix-blend-mode: screen;
+  opacity: 0.92;
 }
 
 .eyebrow {
@@ -71,27 +83,11 @@ h1 {
   line-height: 1.6;
 }
 
-/* ── Cards & panels ── */
 .hero-card, .panel {
   background: var(--panel);
   border: 1px solid var(--panel-border);
   backdrop-filter: blur(18px);
   box-shadow: var(--shadow);
-}
-
-.hospital-logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 12px;
-}
-
-.hospital-logo img {
-  height: 90px;
-  width: auto;
-  display: block;
-  mix-blend-mode: screen;
-  opacity: 0.92;
 }
 
 .hero-card {
@@ -107,20 +103,10 @@ h1 {
   color: var(--muted);
 }
 
-.hero-card__value {
-  margin-top: 8px;
-  font-size: 1.12rem;
-  font-weight: 700;
-}
+.hero-card__value { margin-top: 8px; font-size: 1.12rem; font-weight: 700; }
 
-.hero-card__note {
-  margin-top: 10px;
-  font-size: 0.92rem;
-  color: var(--muted);
-  line-height: 1.5;
-}
+.hero-card__note { margin-top: 10px; font-size: 0.92rem; color: var(--muted); line-height: 1.5; }
 
-/* ── Layout ── */
 .layout {
   display: grid;
   grid-template-columns: minmax(340px, 0.92fr) minmax(520px, 1.08fr);
@@ -128,10 +114,7 @@ h1 {
   align-items: start;
 }
 
-.panel {
-  border-radius: var(--radius);
-  padding: 20px;
-}
+.panel { border-radius: var(--radius); padding: 20px; }
 
 .panel__header {
   display: flex;
@@ -141,12 +124,8 @@ h1 {
   margin-bottom: 16px;
 }
 
-.panel__header h2 {
-  font-size: 1.18rem;
-  letter-spacing: -0.03em;
-}
+.panel__header h2 { font-size: 1.18rem; letter-spacing: -0.03em; }
 
-/* ── Pills ── */
 .pill {
   display: inline-flex;
   align-items: center;
@@ -165,13 +144,7 @@ h1 {
   border-color: transparent;
 }
 
-/* ── Upload ── */
-.upload-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 14px;
-}
+.upload-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
 
 .upload-button {
   position: relative;
@@ -189,25 +162,10 @@ h1 {
 }
 
 .upload-button:hover { transform: translateY(-1px); }
+.upload-button input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 
-.upload-button input {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-/* ── Fields ── */
-.field-group {
-  display: grid;
-  gap: 8px;
-  margin-bottom: 14px;
-}
-
-.field-group label {
-  font-size: 0.9rem;
-  color: #c9d5df;
-}
+.field-group { display: grid; gap: 8px; margin-bottom: 14px; }
+.field-group label { font-size: 0.9rem; color: #c9d5df; }
 
 .field-group input {
   min-height: 46px;
@@ -228,19 +186,9 @@ h1 {
   background: rgba(3,9,13,0.7);
 }
 
-.grid-2 {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0,1fr));
-  gap: 14px;
-}
+.grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
 
-/* ── Buttons ── */
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 4px;
-}
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
 
 .button {
   min-height: 44px;
@@ -263,12 +211,7 @@ h1 {
   font-weight: 700;
 }
 
-.note {
-  margin-top: 14px;
-  color: var(--muted);
-  font-size: 0.92rem;
-  line-height: 1.55;
-}
+.note { margin-top: 14px; color: var(--muted); font-size: 0.92rem; line-height: 1.55; }
 
 /* ── Label preview ── */
 .label-preview {
@@ -304,16 +247,12 @@ h1 {
   flex-direction: column;
   gap: 2px;
   padding-right: 14px;
-  padding-top: 2px;
   padding-left: 0;
+  padding-top: 2px;
   min-height: 0;
 }
 
-.label-top {
-  display: grid;
-  gap: 0;
-  flex: 0 0 auto;
-}
+.label-top { display: grid; gap: 0; flex: 0 0 auto; }
 
 .label-generic {
   font-family: "Nunito", "Space Grotesk", sans-serif;
@@ -372,8 +311,6 @@ h1 {
   line-height: 0.96;
   letter-spacing: -0.06em;
   text-align: left;
-  padding-left: 0;
-  margin-left: 0;
 }
 
 .label-expiry {
@@ -383,8 +320,6 @@ h1 {
   letter-spacing: -0.06em;
   white-space: nowrap;
   text-align: left;
-  padding-left: 0;
-  margin-left: 0;
 }
 
 .label-right-bottom {
@@ -438,12 +373,7 @@ h1 {
   image-rendering: pixelated;
 }
 
-/* ── Meta ── */
-.label-meta {
-  display: grid;
-  gap: 14px;
-  margin-top: 14px;
-}
+.label-meta { display: grid; gap: 14px; margin-top: 14px; }
 
 .barcode-text {
   margin-top: 8px;
@@ -465,12 +395,8 @@ h1 {
   color: var(--muted);
 }
 
-.mono {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 0.92rem;
-}
+.mono { font-family: "IBM Plex Mono", monospace; font-size: 0.92rem; }
 
-/* ── Expiry warning ── */
 .expiry-warning {
   min-height: 1.05em;
   margin-top: -2px;
@@ -499,9 +425,7 @@ h1 {
   text-transform: uppercase;
 }
 
-.credit__label {
-  display: none;
-}
+.credit__label { display: none; }
 
 .credit__name {
   display: inline-flex;
@@ -523,10 +447,7 @@ h1 {
   font-weight: 800;
 }
 
-.credit--top {
-  margin: 0 0 8px;
-  font-size: 1.4rem;
-}
+.credit--top { margin: 0 0 8px; font-size: 1.4rem; }
 
 /* ── Responsive ── */
 @media (max-width: 1180px) {
@@ -542,35 +463,20 @@ h1 {
 
 /* ── PRINT ── */
 @media print {
-  @page {
-    size: 4in 2in;
-    margin: 0;
-  }
-
-  /* Hide everything on the page */
-  body * {
-    visibility: hidden !important;
-  }
-
-  /* Show only the injected #printArea */
+  @page { size: 4in 2in landscape; margin: 0; }
+  body * { visibility: hidden !important; }
   #printArea {
     visibility: visible !important;
     position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 4in !important;
-    height: 2in !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    top: 0 !important; left: 0 !important;
+    width: 4in !important; height: 2in !important;
+    margin: 0 !important; padding: 0 !important;
     z-index: 99999 !important;
   }
-
   #printArea img {
     visibility: visible !important;
     display: block !important;
-    width: 4in !important;
-    height: 2in !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    width: 4in !important; height: 2in !important;
+    margin: 0 !important; padding: 0 !important;
   }
 }

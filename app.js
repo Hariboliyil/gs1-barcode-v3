@@ -1,6 +1,5 @@
 /* global XLSX, bwipjs, html2canvas, QRCode */
 
-/* ── State ── */
 const state = {
   workbookName: '',
   master: [],
@@ -8,18 +7,11 @@ const state = {
   index: [],
   currentProduct: null,
   form: {
-    productCode: '',
-    batch: '',
-    expiry: '',
-    genericCode: '',
-    description: '',
-    gtin: '',
-    locator: '',
-    timestamp: '',
+    productCode: '', batch: '', expiry: '',
+    genericCode: '', description: '', gtin: '', locator: '', timestamp: '',
   },
 };
 
-/* ── DOM refs ── */
 const el = {
   sourceStatus:    document.getElementById('sourceStatus'),
   recordCount:     document.getElementById('recordCount'),
@@ -48,7 +40,6 @@ const el = {
   labelPreview:    document.getElementById('labelPreview'),
 };
 
-/* ── Helpers ── */
 function text(v)  { return String(v ?? '').trim(); }
 function norm(v)  { return text(v).toUpperCase(); }
 
@@ -69,17 +60,15 @@ function parseDate(v) {
   if (v instanceof Date && !isNaN(v)) return v.toISOString().slice(0, 10);
   if (typeof v === 'number') {
     const s = String(Math.trunc(v));
-    if (s.length === 8) {
+    if (s.length === 8)
       return new Date(Date.UTC(+s.slice(4), +s.slice(2,4)-1, +s.slice(0,2))).toISOString().slice(0,10);
-    }
     const d = excelSerialToDate(v);
     return d ? d.toISOString().slice(0,10) : '';
   }
   const s = text(v);
   if (!s) return '';
-  if (/^\d{8}$/.test(s)) {
+  if (/^\d{8}$/.test(s))
     return new Date(Date.UTC(+s.slice(4), +s.slice(2,4)-1, +s.slice(0,2))).toISOString().slice(0,10);
-  }
   const d = new Date(s);
   return isNaN(d) ? '' : d.toISOString().slice(0,10);
 }
@@ -105,7 +94,6 @@ function timestampNow() {
 
 function setStatus(msg) { el.renderStatus.textContent = msg; }
 
-/* ── Expiry warning ── */
 function renderExpiryWarning() {
   const iso = parseDate(state.form.expiry);
   let msg = '';
@@ -120,7 +108,6 @@ function renderExpiryWarning() {
   return msg;
 }
 
-/* ── Workbook ── */
 function readSheet(wb, name) {
   const sheet = wb.Sheets[name];
   return sheet ? XLSX.utils.sheet_to_json(sheet, { defval:'', raw:false, cellDates:true }) : [];
@@ -134,8 +121,7 @@ function buildIndex() {
     const generic     = text(row['GENERIC CODE'] || row['Generic Code'] || row.J);
     const gtin        = text(row['GTIN Number'] || row.AB);
     return {
-      productCode,
-      row,
+      productCode, row,
       searchText: norm([productCode, shortDesc, partNo, generic, gtin].filter(Boolean).join(' ')),
     };
   });
@@ -152,10 +138,10 @@ function findStock(code) {
 }
 
 function deriveFields(row, productCode) {
-  const stock    = findStock(productCode);
-  const partNo   = text(row['Manufacturer Part Number'] || row.Y);
-  const shortDesc= text(row['ITEM SHORT DESCRIPTION'] || row['Item Short Description']);
-  const gtin     = text(row['GTIN Number'] || row.AB);
+  const stock     = findStock(productCode);
+  const partNo    = text(row['Manufacturer Part Number'] || row.Y);
+  const shortDesc = text(row['ITEM SHORT DESCRIPTION'] || row['Item Short Description']);
+  const gtin      = text(row['GTIN Number'] || row.AB);
   return {
     productCode:  text(productCode),
     genericCode:  text(row['GENERIC CODE'] || row['Generic Code'] || row.J),
@@ -169,7 +155,7 @@ function loadWorkbook(file) {
   if (!file) return;
   const ext = file.name.split('.').pop().toLowerCase();
   if (!['xlsx','xlsm','xls'].includes(ext)) {
-    alert(`Unsupported file type ".${ext}". Please upload an .xlsx, .xlsm or .xls file.`);
+    alert(`Unsupported file type ".${ext}". Please upload .xlsx, .xlsm or .xls.`);
     return;
   }
   el.sourceStatus.textContent = `Loading "${file.name}"…`;
@@ -205,17 +191,14 @@ function loadWorkbook(file) {
     el.sourceStatus.textContent = 'File read failed';
     el.recordCount.textContent  = 'No data';
     setStatus('File read error: ' + msg);
-    alert('Could not read file:\n\n' + msg);
   };
   reader.readAsArrayBuffer(file);
 }
 
-/* ── Form ── */
 function updateViews() {
   el.productCode.value = state.form.productCode;
   el.batch.value       = state.form.batch;
   el.expiry.value      = state.form.expiry;
-
   el.genericCodeView.textContent = state.form.genericCode;
   el.productCodeView.textContent = state.form.productCode;
   el.descriptionView.textContent = state.form.description;
@@ -262,7 +245,6 @@ function applyLookup(code) {
   setStatus('Loaded ' + f.productCode);
 }
 
-/* ── QR ── */
 let _qr = null;
 function renderQr() {
   const loc = text(state.form.locator);
@@ -278,21 +260,14 @@ function renderQr() {
   } catch(e) { console.warn('QR failed', e); }
 }
 
-/* ── Barcode ── */
 function buildPayload() {
   const gtin   = text(state.form.gtin);
   const batch  = text(state.form.batch);
   const expiry = gs1Date(state.form.expiry);
-
   if (!gtin) return '';
-
-  // Full GS1: GTIN + expiry + batch
   if (gtin && expiry && batch) return `01${gtin}17${expiry}10${batch}`;
-  // GTIN + expiry only
   if (gtin && expiry)          return `01${gtin}17${expiry}`;
-  // GTIN + batch only
   if (gtin && batch)           return `01${gtin}10${batch}`;
-  // GTIN only
   return `01${gtin}`;
 }
 
@@ -334,7 +309,6 @@ function renderLabel() {
   renderBarcode();
 }
 
-/* ── Copy ── */
 function copyBarcodeText() {
   const p = buildPayload();
   if (!p) return;
@@ -343,7 +317,6 @@ function copyBarcodeText() {
     .catch(() => setStatus('Clipboard unavailable'));
 }
 
-/* ── Download ── */
 async function downloadLabel() {
   const c = await html2canvas(el.labelPreview, { backgroundColor:'#ffffff', scale:2, useCORS:true });
   const a = document.createElement('a');
@@ -352,101 +325,59 @@ async function downloadLabel() {
   a.click();
 }
 
-/* ── Print ── */
 async function printLabel() {
   setStatus('Preparing print…');
   try {
     const c = await html2canvas(el.labelPreview, {
-      backgroundColor: '#ffffff',
-      scale: 4,
-      useCORS: true,
-      logging: false,
+      backgroundColor: '#ffffff', scale: 4, useCORS: true, logging: false,
     });
     const dataUrl = c.toDataURL('image/png');
 
     const html = `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8"/>
+<html><head><meta charset="UTF-8"/>
 <style>
-  @page {
-    margin: 0;
-    size: 4in 2in landscape;
-  }
+  @page { margin:0; size:4in 2in landscape; }
   * { margin:0; padding:0; box-sizing:border-box; }
-  html, body {
-    width: 4in;
-    height: 2in;
-    max-width: 4in;
-    max-height: 2in;
-    overflow: hidden;
-    background: #fff;
-  }
-  img {
-    display: block;
-    width: 4in;
-    height: 2in;
-    max-width: 4in;
-    max-height: 2in;
-  }
-</style>
-</head>
-<body>
-<img src="${dataUrl}"/>
+  html,body { width:4in; height:2in; max-width:4in; max-height:2in; overflow:hidden; background:#fff; }
+  img { display:block; width:4in; height:2in; max-width:4in; max-height:2in; }
+</style></head>
+<body><img src="${dataUrl}"/>
 <script>
-  var img = document.querySelector('img');
-  function doPrint() {
-    window.focus();
-    window.print();
-    setTimeout(function(){ window.close(); }, 1500);
-  }
-  if (img.complete && img.naturalWidth > 0) {
-    setTimeout(doPrint, 300);
-  } else {
-    img.onload = function(){ setTimeout(doPrint, 300); };
-  }
-<\/script>
-</body>
-</html>`;
+  var img=document.querySelector('img');
+  function doPrint(){ window.focus(); window.print(); setTimeout(function(){ window.close(); },1500); }
+  if(img.complete && img.naturalWidth>0){ setTimeout(doPrint,300); } else { img.onload=function(){ setTimeout(doPrint,300); }; }
+<\/script></body></html>`;
 
-    const blob = new Blob([html], { type: 'text/html' });
+    const blob = new Blob([html], { type:'text/html' });
     const url  = URL.createObjectURL(blob);
-    const win  = window.open(url, '_blank',
-      'width=816,height=412,toolbar=0,menubar=0,scrollbars=0,resizable=0');
+    const win  = window.open(url, '_blank', 'width=816,height=412,toolbar=0,menubar=0,scrollbars=0,resizable=0');
 
     if (!win) {
-      alert('Pop-up blocked!\n\nAllow pop-ups for this site in Chrome, then try again.');
+      alert('Pop-up blocked!\n\nAllow pop-ups for this site in Chrome settings, then try again.');
       setStatus('Pop-up blocked — allow pop-ups and retry');
       URL.revokeObjectURL(url);
       return;
     }
-
     setTimeout(() => URL.revokeObjectURL(url), 15000);
     setStatus('Print dialog opened');
-
   } catch(err) {
     console.error(err);
     setStatus('Print failed: ' + (err.message || err));
   }
 }
 
-/* ── Events ── */
 function wireEvents() {
-  // File upload
   el.workbookFile.addEventListener('change', () => {
     const f = el.workbookFile.files && el.workbookFile.files[0];
     if (f) loadWorkbook(f);
     el.workbookFile.value = '';
   });
 
-  // Drag and drop
   el.uploadLabel.addEventListener('dragover', e => {
     e.preventDefault();
     el.uploadLabel.style.background = 'rgba(45,212,191,0.2)';
   });
-  el.uploadLabel.addEventListener('dragleave', () => {
-    el.uploadLabel.style.background = '';
-  });
+  el.uploadLabel.addEventListener('dragleave', () => { el.uploadLabel.style.background = ''; });
   el.uploadLabel.addEventListener('drop', e => {
     e.preventDefault();
     el.uploadLabel.style.background = '';
@@ -454,7 +385,6 @@ function wireEvents() {
     if (f) loadWorkbook(f);
   });
 
-  // Inputs
   el.productCode.addEventListener('input', () => {
     state.form.productCode = el.productCode.value.trim();
     state.index.length ? applyLookup(state.form.productCode) : renderLabel();
@@ -474,7 +404,6 @@ function wireEvents() {
   el.expiry.addEventListener('input', onExpiry);
   el.expiry.addEventListener('change', onExpiry);
 
-  // Buttons
   el.applyBtn.addEventListener('click', () => {
     if (state.form.productCode && state.index.length) applyLookup(state.form.productCode);
     else renderLabel();
@@ -484,7 +413,6 @@ function wireEvents() {
   el.printBtn.addEventListener('click', () => void printLabel());
 }
 
-/* ── Init ── */
 function init() {
   el.sourceStatus.textContent = 'No workbook loaded';
   el.recordCount.textContent  = 'No data';
